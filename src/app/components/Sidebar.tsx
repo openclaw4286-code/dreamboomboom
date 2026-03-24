@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router";
-import { Users, Building2, BarChart3, FileText, Settings, Monitor, Layout } from "lucide-react";
+import { Users, Building2, BarChart3, FileText, Settings, Layout } from "lucide-react";
 import { cn } from "./ui/utils";
 
 interface MenuItem {
@@ -7,6 +7,10 @@ interface MenuItem {
   name: string;
   icon: React.ElementType;
   path: string;
+}
+
+interface SidebarProps {
+  onClose?: () => void;
 }
 
 const menuItems = [
@@ -48,16 +52,21 @@ const menuItems = [
   },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ onClose }: SidebarProps) {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    onClose?.();
+  };
 
   return (
     <div className="w-64 bg-slate-900 border-r border-slate-700 flex flex-col h-screen">
       {/* Logo */}
       <div className="p-6 border-b border-slate-700">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center shrink-0">
             <Users className="w-6 h-6 text-white" />
           </div>
           <div>
@@ -73,11 +82,11 @@ export default function Sidebar() {
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.path;
-            
+
             return (
               <li key={item.id}>
                 <button
-                  onClick={() => navigate(item.path)}
+                  onClick={() => handleNavigation(item.path)}
                   className={cn(
                     "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200",
                     isActive
@@ -85,7 +94,7 @@ export default function Sidebar() {
                       : "text-slate-400 hover:text-white hover:bg-slate-800"
                   )}
                 >
-                  <Icon className="w-5 h-5" />
+                  <Icon className="w-5 h-5 shrink-0" />
                   <span className="font-medium">{item.name}</span>
                 </button>
               </li>
@@ -99,7 +108,7 @@ export default function Sidebar() {
         <div className="bg-slate-800/50 rounded-lg p-3">
           <p className="text-xs text-slate-400 mb-1">시스템 상태</p>
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shrink-0" />
             <span className="text-sm text-white font-medium">정상 운영중</span>
           </div>
         </div>

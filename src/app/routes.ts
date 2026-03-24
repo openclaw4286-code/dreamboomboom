@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router";
+import Layout from "./components/Layout";
 import SituationRoom from "./pages/SituationRoom";
 import Customize from "./pages/Customize";
 import UnitManagement from "./pages/UnitManagement";
@@ -8,27 +9,32 @@ import Settings from "./pages/Settings";
 
 export const router = createBrowserRouter([
   {
-    path: "/",
-    Component: SituationRoom,
-  },
-  {
-    path: "/customize",
-    Component: Customize,
-  },
-  {
-    path: "/unit",
-    Component: UnitManagement,
-  },
-  {
-    path: "/logs",
-    Component: OperationLogs,
-  },
-  {
-    path: "/stats",
-    Component: Statistics,
-  },
-  {
-    path: "/settings",
-    Component: Settings,
+    Component: Layout,
+    children: [
+      {
+        path: "/",
+        Component: SituationRoom,
+      },
+      {
+        path: "/customize",
+        Component: Customize,
+      },
+      {
+        path: "/unit",
+        Component: UnitManagement,
+      },
+      {
+        path: "/logs",
+        Component: OperationLogs,
+      },
+      {
+        path: "/stats",
+        Component: Statistics,
+      },
+      {
+        path: "/settings",
+        Component: Settings,
+      },
+    ],
   },
 ]);
