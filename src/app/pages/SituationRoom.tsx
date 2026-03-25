@@ -16,8 +16,10 @@ export default function SituationRoom() {
     // Load agents from localStorage or use defaults
     const savedAgents = localStorage.getItem("solomon-agents-v2");
     if (savedAgents) {
-      const parsed = JSON.parse(savedAgents);
+      // 정훈 AI Agent(id: "1") 마이그레이션 - 삭제된 에이전트 제거
+      const parsed = JSON.parse(savedAgents).filter((a: Agent) => a.id !== "1");
       setAgents(parsed);
+      localStorage.setItem("solomon-agents-v2", JSON.stringify(parsed));
     } else {
       setAgents(defaultAgents);
       localStorage.setItem("solomon-agents-v2", JSON.stringify(defaultAgents));

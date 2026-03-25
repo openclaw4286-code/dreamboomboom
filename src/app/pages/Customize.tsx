@@ -16,8 +16,9 @@ export default function Customize() {
   useEffect(() => {
     const savedAgents = localStorage.getItem("solomon-agents-v2");
     if (savedAgents) {
-      const parsed = JSON.parse(savedAgents);
+      const parsed = JSON.parse(savedAgents).filter((a: Agent) => a.id !== "1");
       setAgents(parsed);
+      localStorage.setItem("solomon-agents-v2", JSON.stringify(parsed));
     } else {
       setAgents(defaultAgents);
       localStorage.setItem("solomon-agents-v2", JSON.stringify(defaultAgents));
