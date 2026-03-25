@@ -16,9 +16,13 @@ export default function Customize() {
   useEffect(() => {
     const savedAgents = localStorage.getItem("solomon-agents-v2");
     if (savedAgents) {
-      const parsed = JSON.parse(savedAgents).filter((a: Agent) => a.id !== "1");
-      setAgents(parsed);
-      localStorage.setItem("solomon-agents-v2", JSON.stringify(parsed));
+      const filtered = JSON.parse(savedAgents).filter((a: Agent) => a.id !== "1");
+      const remapped = filtered.map((a: Agent, i: number) => ({
+        ...a,
+        position: { row: Math.floor(i / 3), col: i % 3 },
+      }));
+      setAgents(remapped);
+      localStorage.setItem("solomon-agents-v2", JSON.stringify(remapped));
     } else {
       setAgents(defaultAgents);
       localStorage.setItem("solomon-agents-v2", JSON.stringify(defaultAgents));

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router";
-import { Users, Building2, BarChart3, FileText, Settings, Layout, Shield } from "lucide-react";
+import { Users, BarChart3, FileText, Settings, Layout, Shield } from "lucide-react";
 import { cn } from "./ui/utils";
 import { adminCheckSession } from "../utils/githubApi";
 
@@ -30,12 +30,6 @@ const menuItems: MenuItem[] = [
     name: "Agent 관리",
     icon: Users,
     path: "/customize",
-  },
-  {
-    id: "unit-management",
-    name: "부대 관리",
-    icon: Building2,
-    path: "/unit",
   },
   {
     id: "operation-log",

@@ -2,7 +2,6 @@ import { createBrowserRouter } from "react-router";
 import Layout from "./components/Layout";
 import SituationRoom from "./pages/SituationRoom";
 import Customize from "./pages/Customize";
-import UnitManagement from "./pages/UnitManagement";
 import OperationLogs from "./pages/OperationLogs";
 import Statistics from "./pages/Statistics";
 import Settings from "./pages/Settings";
@@ -19,10 +18,6 @@ export const router = createBrowserRouter([
       {
         path: "/customize",
         Component: Customize,
-      },
-      {
-        path: "/unit",
-        Component: UnitManagement,
       },
       {
         path: "/logs",
