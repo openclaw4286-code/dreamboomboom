@@ -6,6 +6,7 @@ import UnitManagement from "./pages/UnitManagement";
 import OperationLogs from "./pages/OperationLogs";
 import Statistics from "./pages/Statistics";
 import Settings from "./pages/Settings";
+import Admin from "./pages/Admin";
 
 export const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ export const router = createBrowserRouter([
       {
         path: "/settings",
         Component: Settings,
+      },
+      {
+        path: "/admin",
+        Component: Admin,
       },
     ],
   },

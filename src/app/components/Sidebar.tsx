@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router";
-import { Users, Building2, BarChart3, FileText, Settings, Layout } from "lucide-react";
+import { Users, Building2, BarChart3, FileText, Settings, Layout, Shield } from "lucide-react";
 import { cn } from "./ui/utils";
 
 interface MenuItem {
@@ -49,6 +49,12 @@ const menuItems = [
     name: "설정",
     icon: Settings,
     path: "/settings",
+  },
+  {
+    id: "admin",
+    name: "관리자",
+    icon: Shield,
+    path: "/admin",
   },
 ];
 

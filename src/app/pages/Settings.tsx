@@ -1,34 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Switch } from "../components/ui/switch";
 import { Label } from "../components/ui/label";
-import { Input } from "../components/ui/input";
-import { Bell, Moon, Globe, Shield, Bot, Eye, EyeOff, CheckCircle2, Menu } from "lucide-react";
-import {
-  GITHUB_TOKEN_KEY,
-  GITHUB_MODEL_KEY,
-  AVAILABLE_MODELS,
-} from "../utils/githubApi";
+import { Bell, Moon, Globe, Shield, Bot, CheckCircle2, AlertCircle, Menu } from "lucide-react";
+import { checkTokenStatus } from "../utils/githubApi";
 import { useMobileMenu } from "../components/MobileMenuContext";
 
 export default function Settings() {
-  const [githubToken, setGithubToken] = useState(
-    () => localStorage.getItem(GITHUB_TOKEN_KEY) || ""
-  );
-  const [selectedModel, setSelectedModel] = useState(
-    () => localStorage.getItem(GITHUB_MODEL_KEY) || "openai/gpt-4o-mini"
-  );
-  const [showToken, setShowToken] = useState(false);
-  const [tokenSaved, setTokenSaved] = useState(false);
+  const [tokenConfigured, setTokenConfigured] = useState<boolean | null>(null);
   const openMenu = useMobileMenu();
 
-  const handleSaveToken = () => {
-    localStorage.setItem(GITHUB_TOKEN_KEY, githubToken);
-    localStorage.setItem(GITHUB_MODEL_KEY, selectedModel);
-    setTokenSaved(true);
-    setTimeout(() => setTokenSaved(false), 2000);
-  };
+  useEffect(() => {
+    checkTokenStatus().then(setTokenConfigured);
+  }, []);
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
@@ -53,95 +38,36 @@ export default function Settings() {
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-4 md:p-8">
         <div className="max-w-4xl mx-auto space-y-4 md:space-y-6">
-          {/* GitHub Copilot API */}
+          {/* AI Status */}
           <Card className="bg-slate-800/50 border-indigo-500/50">
             <CardHeader>
               <div className="flex items-center gap-3">
                 <Bot className="w-5 h-5 text-indigo-400 shrink-0" />
                 <div>
                   <CardTitle className="text-white text-base md:text-lg">
-                    GitHub Copilot AI 설정
+                    AI 상태
                   </CardTitle>
                   <CardDescription className="text-slate-400 text-sm">
-                    GitHub Models API 연동을 위한 토큰을 설정합니다
+                    AI 에이전트 연결 상태
                   </CardDescription>
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="space-y-4 md:space-y-5">
-              <div className="rounded-lg bg-slate-900/60 border border-slate-600 p-3 md:p-4 text-sm text-slate-300 space-y-2">
-                <p className="font-semibold text-indigo-300">토큰 발급 방법:</p>
-                <ol className="list-decimal list-inside space-y-1 text-slate-400 text-xs md:text-sm">
-                  <li>GitHub.com → 오른쪽 상단 프로필 → Settings</li>
-                  <li>왼쪽 하단 Developer settings → Personal access tokens</li>
-                  <li>Fine-grained tokens → Generate new token</li>
-                  <li>
-                    Permissions → Account permissions →{" "}
-                    <span className="text-indigo-300 font-medium">Models: Read</span> 선택
-                  </li>
-                  <li>Generate token 클릭 후 토큰 복사</li>
-                </ol>
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-slate-300">GitHub Personal Access Token</Label>
-                <div className="relative">
-                  <Input
-                    type={showToken ? "text" : "password"}
-                    placeholder="github_pat_..."
-                    value={githubToken}
-                    onChange={(e) => setGithubToken(e.target.value)}
-                    className="bg-slate-900 border-slate-600 text-white placeholder:text-slate-500 pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowToken(!showToken)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200"
-                  >
-                    {showToken ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
+            <CardContent>
+              {tokenConfigured === null ? (
+                <p className="text-slate-400 text-sm">확인 중...</p>
+              ) : tokenConfigured ? (
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 text-green-400" />
+                  <span className="text-green-400 font-medium">AI 활성화됨</span>
+                  <span className="text-slate-500 text-sm">- 에이전트 채팅을 사용할 수 있습니다</span>
                 </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label className="text-slate-300">AI 모델 선택</Label>
-                <select
-                  value={selectedModel}
-                  onChange={(e) => setSelectedModel(e.target.value)}
-                  className="w-full rounded-md border border-slate-600 bg-slate-900 text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                >
-                  {AVAILABLE_MODELS.map((model) => (
-                    <option key={model.value} value={model.value}>
-                      {model.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <Button
-                onClick={handleSaveToken}
-                disabled={!githubToken.trim()}
-                className="w-full bg-indigo-600 hover:bg-indigo-700"
-              >
-                {tokenSaved ? (
-                  <span className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4" /> 저장 완료
-                  </span>
-                ) : (
-                  "저장"
-                )}
-              </Button>
-
-              {githubToken && (
-                <p className="text-xs text-green-400 flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3" />
-                  토큰이 설정되어 있습니다. AI 에이전트 채팅이 활성화됩니다.
-                </p>
-              )}
-              {!githubToken && (
-                <p className="text-xs text-amber-400">
-                  ⚠️ 토큰 미설정 시 에이전트가 고정 응답을 반환합니다.
-                </p>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <AlertCircle className="w-5 h-5 text-amber-400" />
+                  <span className="text-amber-400 font-medium">AI 비활성화</span>
+                  <span className="text-slate-500 text-sm">- 관리자에게 문의하세요</span>
+                </div>
               )}
             </CardContent>
           </Card>

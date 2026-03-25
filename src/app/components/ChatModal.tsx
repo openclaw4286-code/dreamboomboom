@@ -5,7 +5,7 @@ import { Textarea } from "./ui/textarea";
 import { Send, X, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import { Agent } from "../types/agent";
 import { motion, AnimatePresence } from "motion/react";
-import { callGithubCopilot, GITHUB_TOKEN_KEY, GITHUB_MODEL_KEY } from "../utils/githubApi";
+import { callGithubCopilot, checkTokenStatus } from "../utils/githubApi";
 
 interface ChatModalProps {
   agent: Agent | null;
@@ -78,13 +78,12 @@ export default function ChatModal({ agent, isOpen, onClose, onTaskComplete }: Ch
       setCurrentTaskProgress((prev) => (prev >= 90 ? 90 : prev + 5));
     }, 300);
 
-    const token = localStorage.getItem(GITHUB_TOKEN_KEY) || "";
-    const model = localStorage.getItem(GITHUB_MODEL_KEY) || "openai/gpt-4o-mini";
-
     try {
       let responseContent: string;
 
-      if (token) {
+      const tokenConfigured = await checkTokenStatus();
+
+      if (tokenConfigured) {
         // Build conversation history for the API call
         const conversationHistory = messages
           .filter((m) => m.role === "user" || m.role === "assistant")
@@ -100,21 +99,15 @@ export default function ChatModal({ agent, isOpen, onClose, onTaskComplete }: Ch
           .filter(Boolean)
           .join("\n");
 
-        responseContent = await callGithubCopilot(
-          [
-            { role: "system", content: systemPrompt },
-            ...conversationHistory,
-            { role: "user", content: taskInput },
-          ],
-          token,
-          model
-        );
+        responseContent = await callGithubCopilot([
+          { role: "system", content: systemPrompt },
+          ...conversationHistory,
+          { role: "user", content: taskInput },
+        ]);
       } else {
-        // Fallback when no token is set
+        // Fallback when no token is configured on server
         await new Promise((resolve) => setTimeout(resolve, 1500));
-        responseContent = agent.knowledge
-          ? `${agent.knowledge}\n\n이를 바탕으로 "${taskInput}" 작업을 완료했습니다.\n\n⚠️ GitHub 토큰이 설정되지 않아 실제 AI 응답 대신 기본 응답을 반환합니다.\n설정 페이지에서 GitHub Personal Access Token을 입력해주십시오.`
-          : `"${taskInput}" 작업을 수신했습니다.\n\n⚠️ GitHub 토큰이 설정되지 않아 AI 응답을 사용할 수 없습니다.\n설정(⚙️) 페이지에서 GitHub Personal Access Token을 입력하면 실제 AI 응답을 받을 수 있습니다.`;
+        responseContent = `"${taskInput}" 작업을 수신했습니다.\n\n⚠️ AI 토큰이 서버에 설정되지 않았습니다.\n관리자에게 문의해주십시오.`;
       }
 
       clearInterval(progressInterval);
