@@ -40,8 +40,8 @@ export default function OperationLogs() {
     },
     {
       id: 5,
-      agent: "정훈 AI Agent",
-      action: "정신교육 자료 준비",
+      agent: "군수 AI Agent",
+      action: "보급품 현황 점검",
       timestamp: new Date(2026, 2, 9, 10, 30),
       status: "completed",
       duration: "18분",

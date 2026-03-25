@@ -21,7 +21,6 @@ export default function Statistics() {
     { name: "정보", count: 38 },
     { name: "군수", count: 32 },
     { name: "인사", count: 28 },
-    { name: "정훈", count: 25 },
     { name: "군법", count: 22 },
   ];
 

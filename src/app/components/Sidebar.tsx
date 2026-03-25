@@ -1,19 +1,24 @@
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router";
 import { Users, Building2, BarChart3, FileText, Settings, Layout, Shield } from "lucide-react";
 import { cn } from "./ui/utils";
+import { adminCheckSession } from "../utils/githubApi";
 
 interface MenuItem {
   id: string;
   name: string;
   icon: React.ElementType;
   path: string;
+  adminOnly?: boolean;
 }
 
 interface SidebarProps {
   onClose?: () => void;
 }
 
-const menuItems = [
+const SESSION_KEY = "solomon-admin-session";
+
+const menuItems: MenuItem[] = [
   {
     id: "situation-room",
     name: "상황실",
@@ -43,6 +48,7 @@ const menuItems = [
     name: "통계",
     icon: BarChart3,
     path: "/stats",
+    adminOnly: true,
   },
   {
     id: "settings",
@@ -55,17 +61,30 @@ const menuItems = [
     name: "관리자",
     icon: Shield,
     path: "/admin",
+    adminOnly: true,
   },
 ];
 
 export default function Sidebar({ onClose }: SidebarProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const sid = sessionStorage.getItem(SESSION_KEY);
+    if (sid) {
+      adminCheckSession(sid).then(setIsAdmin);
+    } else {
+      setIsAdmin(false);
+    }
+  }, [location.pathname]);
 
   const handleNavigation = (path: string) => {
     navigate(path);
     onClose?.();
   };
+
+  const visibleItems = menuItems.filter((item) => !item.adminOnly || isAdmin);
 
   return (
     <div className="w-64 bg-slate-900 border-r border-slate-700 flex flex-col h-screen">
@@ -85,7 +104,7 @@ export default function Sidebar({ onClose }: SidebarProps) {
       {/* Menu Items */}
       <nav className="flex-1 p-4">
         <ul className="space-y-2">
-          {menuItems.map((item) => {
+          {visibleItems.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.path;
 

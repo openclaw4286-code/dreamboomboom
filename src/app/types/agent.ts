@@ -18,19 +18,6 @@ export interface Agent {
 
 export const defaultAgents: Agent[] = [
   {
-    id: "1",
-    name: "정훈 AI Agent",
-    rank: "소령",
-    role: "정신교육 및 홍보",
-    emoji: "📢",
-    color: "bg-blue-100 text-blue-700",
-    knowledge: "",
-    lastUsed: undefined,
-    isFavorite: false,
-    isWorking: false,
-    position: { row: 0, col: 0 },
-  },
-  {
     id: "2",
     name: "인사 AI Agent",
     rank: "소령",
