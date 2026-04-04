@@ -28,7 +28,7 @@ export const defaultAgents: Agent[] = [
     lastUsed: undefined,
     isFavorite: false,
     isWorking: false,
-    position: { row: 0, col: 1 },
+    position: { row: 0, col: 0 },
   },
   {
     id: "3",
@@ -41,7 +41,7 @@ export const defaultAgents: Agent[] = [
     lastUsed: undefined,
     isFavorite: false,
     isWorking: false,
-    position: { row: 0, col: 2 },
+    position: { row: 0, col: 1 },
   },
   {
     id: "4",
@@ -54,7 +54,7 @@ export const defaultAgents: Agent[] = [
     lastUsed: undefined,
     isFavorite: false,
     isWorking: false,
-    position: { row: 1, col: 0 },
+    position: { row: 0, col: 2 },
   },
   {
     id: "5",
@@ -67,7 +67,7 @@ export const defaultAgents: Agent[] = [
     lastUsed: undefined,
     isFavorite: false,
     isWorking: false,
-    position: { row: 1, col: 1 },
+    position: { row: 1, col: 0 },
   },
   {
     id: "6",
@@ -80,7 +80,7 @@ export const defaultAgents: Agent[] = [
     lastUsed: undefined,
     isFavorite: false,
     isWorking: false,
-    position: { row: 1, col: 2 },
+    position: { row: 1, col: 1 },
   },
   {
     id: "7",
@@ -93,6 +93,6 @@ export const defaultAgents: Agent[] = [
     lastUsed: undefined,
     isFavorite: false,
     isWorking: false,
-    position: { row: 2, col: 0 },
+    position: { row: 1, col: 2 },
   },
 ];
